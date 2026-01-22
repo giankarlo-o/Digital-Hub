@@ -1,0 +1,24 @@
+name: Deploy Digital Hub
+
+on:
+  push:
+    branches:
+      - main  # Trigger only when you push to main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: SSH and Pull Changes
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /var/www/digital-hub
+            git pull origin main
+            # If you later use Docker, you would add 'docker-compose up -d' here
