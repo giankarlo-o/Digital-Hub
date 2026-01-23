@@ -3,8 +3,9 @@ version: '3.8'
 services:
   db:
     image: mariadb:11
+    container_name: db
     volumes:
-      - wp_data:/var/lib/mysql
+      - wp_db:/var/lib/mysql/
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ${DATABASE_ROOT_PASSWORD}
@@ -16,6 +17,7 @@ services:
     depends_on:
       - db
     image: wordpress:php8.2-apache
+    container_name: wordpress
     ports:
       - "127.0.0.1:8080:80"
     restart: always
@@ -27,7 +29,28 @@ services:
       WORDPRESS_HOME: https://giankarlo.me/blog
       WORDPRESS_SITEURL: https://giankarlo.me/blog
     volumes:
-      - wp_data:/var/www/html
+      - wp_data:/var/www/html/
+  
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    container_name: nginx
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d/
+      - ./nginx/certs:/etc/letsencrypt
+    depends_on:
+      - wordpress
+    restart: always
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - ./nginx/certs:/etc/letsencrypt
+      - ./nginx/conf.d:/etc/nginx/conf.d/
+    command: certonly --webroot --webroot-path=/var/www/html --email ${USER_EMAIL} --agree-tos --no-eff-email --staging -d giankarlo.me -d www.giankarlo.me
 
 volumes:
   wp_db:
