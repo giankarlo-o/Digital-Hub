@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   db:
     image: mariadb:11
@@ -40,6 +38,7 @@ services:
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d/
       - ./nginx/certs:/etc/letsencrypt
+      - /var/www/digital-hub/landing:/var/www/digital-hub/landing
     depends_on:
       - wordpress
     restart: always
