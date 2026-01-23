@@ -24,6 +24,8 @@ services:
       WORDPRESS_DB_USER: wp_user
       WORDPRESS_DB_PASSWORD: ${DATABASE_PASSWORD}
       WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_HOME: https://giankarlo.me/blog
+      WORDPRESS_SITEURL: https://giankarlo.me/blog
     volumes:
       - wp_data:/var/www/html
 
