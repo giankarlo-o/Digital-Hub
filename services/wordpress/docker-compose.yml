@@ -2,9 +2,9 @@ version: '3.8'
 
 services:
   db:
-    image: mariadb:10.6
+    image: mariadb:11
     volumes:
-      - db_data:/var/lib/mysql
+      - wp_data:/var/lib/mysql
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ${DATABASE_ROOT_PASSWORD}
@@ -15,15 +15,18 @@ services:
   wordpress:
     depends_on:
       - db
-    image: wordpress:latest
+    image: wordpress:php8.2-apache
     ports:
-      - "8080:80"
+      - "127.0.0.1:8080:80"
     restart: always
     environment:
       WORDPRESS_DB_HOST: db
       WORDPRESS_DB_USER: wp_user
       WORDPRESS_DB_PASSWORD: ${DATABASE_PASSWORD}
       WORDPRESS_DB_NAME: wordpress
+    volumes:
+      - wp_data:/var/www/html
 
 volumes:
-  db_data:
+  wp_db:
+  wp_data:

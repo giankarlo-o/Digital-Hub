@@ -1,2 +1,19 @@
+# Env files
 **/.env
-services/wordpress/db_data/
+.env.*
+!.env.example
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+
+# Node modules
+**/node_modules
+
+# Build outputs
+dist/
+bin/
+obj/
+
+# Logs
+*.log
