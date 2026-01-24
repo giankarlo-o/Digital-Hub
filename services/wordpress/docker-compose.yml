@@ -43,13 +43,13 @@ services:
       - wordpress
     restart: always
 
-  certbot:
-    image: certbot/certbot
-    container_name: certbot
-    volumes:
-      - ./nginx/certs:/etc/letsencrypt
-      - ./nginx/conf.d:/etc/nginx/conf.d/
-    command: certonly --webroot --webroot-path=/var/www/html --email ${USER_EMAIL} --agree-tos --no-eff-email --staging -d giankarlo.me -d www.giankarlo.me
+  # certbot:
+  #   image: certbot/certbot
+  #   container_name: certbot
+  #   volumes:
+  #     - ./nginx/certs:/etc/letsencrypt
+  #     - ./nginx/conf.d:/etc/nginx/conf.d/
+  #   command: certonly --webroot --webroot-path=/var/www/html --email ${USER_EMAIL} --agree-tos --no-eff-email --staging -d giankarlo.me -d www.giankarlo.me
 
 volumes:
   wp_db:
