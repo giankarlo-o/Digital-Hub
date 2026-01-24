@@ -12,44 +12,47 @@ services:
       MYSQL_PASSWORD: ${DATABASE_PASSWORD}
 
   wordpress:
-    depends_on:
-      - db
     image: wordpress:php8.2-apache
     container_name: wordpress
-    ports:
-      - "127.0.0.1:8080:80"
+    depends_on:
+      - db
     restart: always
     environment:
       WORDPRESS_DB_HOST: db
       WORDPRESS_DB_USER: wp_user
       WORDPRESS_DB_PASSWORD: ${DATABASE_PASSWORD}
       WORDPRESS_DB_NAME: wordpress
-      WORDPRESS_HOME: https://giankarlo.me/blog
-      WORDPRESS_SITEURL: https://giankarlo.me/blog
+      # WORDPRESS_HOME: https://giankarlo.me/blog
+      # WORDPRESS_SITEURL: https://giankarlo.me/blog
     volumes:
       - wp_data:/var/www/html/
   
   nginx:
     image: nginx:latest
+    container_name: nginx
     ports:
       - "80:80"
       - "443:443"
-    container_name: nginx
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d/
       - ./nginx/certs:/etc/letsencrypt
-      - /var/www/digital-hub/landing:/var/www/digital-hub/landing
-    depends_on:
-      - wordpress
+      - ./nginx/certbot-www:/var/www/certbot
     restart: always
 
-  # certbot:
-  #   image: certbot/certbot
-  #   container_name: certbot
-  #   volumes:
-  #     - ./nginx/certs:/etc/letsencrypt
-  #     - ./nginx/conf.d:/etc/nginx/conf.d/
-  #   command: certonly --webroot --webroot-path=/var/www/html --email ${USER_EMAIL} --agree-tos --no-eff-email --staging -d giankarlo.me -d www.giankarlo.me
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - ./nginx/certs:/etc/letsencrypt
+      - ./nginx/certbot-www:/var/www/certbot
+    command:       
+      certonly --webroot 
+      --webroot-path=/var/www/certbot 
+      --email ${USER_EMAIL} 
+      --agree-tos 
+      --no-eff-email 
+      -d giankarlo.me 
+      -d www.giankarlo.me
 
 volumes:
   wp_db:
