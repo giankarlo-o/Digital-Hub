@@ -34,9 +34,10 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d/
-      - ./nginx/certs:/etc/letsencrypt
-      - ./nginx/certbot-www:/var/www/certbot
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/certs:/etc/letsencrypt:ro
+      - /var/www/digital-hub/landing:/var/www/digital-hub/landing:ro
+      - ./nginx/certbot-www:/var/www/certbot:ro
     restart: always
 
   certbot:
